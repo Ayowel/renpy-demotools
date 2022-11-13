@@ -1,5 +1,9 @@
 # Demotools
 
+[![Release status](https://img.shields.io/github/workflow/status/ayowel/renpy-demotools/Release?label=release)](https://github.com/Ayowel/renpy-demotools/actions/workflows/release.yml)
+[![Release version](https://img.shields.io/github/v/release/ayowel/renpy-demotools)](https://github.com/Ayowel/renpy-demotools/releases/latest)
+[![License](https://img.shields.io/github/license/ayowel/renpy-demotools)](LICENSE)
+
 This is a tool used to generate live demos or demo snapshots to generate gifs
 
 ## Usage
