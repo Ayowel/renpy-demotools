@@ -179,6 +179,8 @@ def demotools_command():
                 raise "Invalid cursor parameter, requires two floats separated by ':' ({})".format(l)
             item = CursorScheduleItem('cursor', pos[:3], pos[3] if len(pos) > 3 else None)
         elif arg[0] == 'loop':
+            if args.render:
+                raise Exception("Using a loop when rendering is not supported")
             item = LoopScheduleItem(arg[0], None, float(arg[1]) if arg[1] else None)
         elif arg[0] == 'quit':
             item = ExitScheduleItem(arg[0], None, float(arg[1]) if arg[1] else None)
