@@ -11,7 +11,8 @@ demo_status = {
 orig_plog = renpy.plog
 def plog_override(*args, **kwargs):
     # Target specific renpy.plog execution in renpy/execution.py
-    after_start(len(args) == 5 and args[0] == 2 and ' after execute ' in args[1])
+    may_update = len(args) == 2 and args[0] == 1 and args[1].startswith('start of interact while loop')
+    after_start(may_update)
     global orig_plog
     orig_plog(*args, **kwargs)
 renpy.plog = plog_override
