@@ -13,11 +13,22 @@ Move to the game's root directory in the command line and run the `demotools` co
 
 ```sh
 # Run a specific label and stop
-../../../sdk/renpy/renpy-8.0.3-sdk/renpy.sh . demotools call=my_demo_label
+renpy.sh . demotools call=my_demo_label
 # Run a specific label and loop
-../../../sdk/renpy/renpy-8.0.3-sdk/renpy.sh . demotools call=my_demo_label loop
+renpy.sh . demotools call=my_demo_label loop
 # Run a specific label and create render snapshots
-../../../sdk/renpy/renpy-8.0.3-sdk/renpy.sh . demotools --render call=my_demo_label
+renpy.sh . demotools --render call=my_demo_label
+```
+
+If you want to create your own gifs from the generated files, we recommend you use ffmpeg :
+
+```sh
+# Create a new snapshot 
+mkdir -p target/cache
+renpy.sh . demotools --render --render-fps 5 --destination target/cache call=my_demo_label
+ffmpeg -v warning -f image2 -i 'target/cache/snapshot-%*.png' -framerate 5 -r 5 -y target/snapshot.gif
+#ffmpeg -v warning -i 'snapshot-%*.png' -vf "fps=30,scale=flags=lanczos,paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle" snapshot.gif -y
+
 ```
 
 ## Available commands
@@ -30,6 +41,10 @@ Nearly all parameters accept an optional `DELAY` parameter that specifies how lo
   * `LABEL_NAME`: The name of the label that should be called
 * `show=SCREEN_NAME[:DELAY]`:
   * `SCREEN_NAME`: The name of the screen that should be shown
+* `jump=LABEL_NAME[:DELAY]`:
+  * `LABEL_NAME`: The name of the label that should be jumped to
+* `hidescreen=SCREEN_NAME[:DELAY]`:
+  * `SCREEN_NAME`: The name of the screen that should be hidden
 * `cursor=POS_X:POS_Y[:TIME[:DELAY]]`': Set the cursor's position
   * `POS_X`, `POS_Y`: Cursor's position
   * `TIME`: How long it takes for the cursor to move to its new position

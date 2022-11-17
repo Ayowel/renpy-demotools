@@ -129,7 +129,11 @@ class CallScheduleItem(UIScheduleItem):
         if self.kind == 'call':
             renpy.store.renpy.call(self.value)()
         elif self.kind == 'show':
-            renpy.store.Show(self.value)()
+            renpy.store.renpy.show_screen(self.value)
+        elif self.kind == 'jump':
+            renpy.store.renpy.jump(self.value)
+        elif self.kind == 'hidescreen':
+            renpy.store.renpy.hide_screen(self.value)
 
 class LoopScheduleItem(UIScheduleItem):
     def on_end(self, context, st):
@@ -173,7 +177,7 @@ def demotools_command():
         if len(arg) > 2:
             raise Exception("Improperly formatted parameter: '{}'".format(l))
         arg = (arg[0].strip(), arg[1].strip() if len(arg) > 1 else '')
-        if arg[0] in ['call', 'show']:
+        if arg[0] in ['call', 'show', 'jump', 'hidescreen']:
             info = [i.strip() for i in arg[1].split(':')]
             item = CallScheduleItem(arg[0], *info)
             # demo_status['schedule'].append({'key': arg[0], 'value': info[0], 'delay': float(info[1]) if len(info) > 1 else None})
