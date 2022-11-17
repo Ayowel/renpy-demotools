@@ -27,8 +27,6 @@ If you want to create your own gifs from the generated files, we recommend you u
 mkdir -p target/cache
 renpy.sh . demotools --render --render-fps 5 --destination target/cache call=my_demo_label
 ffmpeg -v warning -f image2 -i 'target/cache/snapshot-%*.png' -framerate 5 -r 5 -y target/snapshot.gif
-#ffmpeg -v warning -i 'snapshot-%*.png' -vf "fps=30,scale=flags=lanczos,paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle" snapshot.gif -y
-
 ```
 
 ## Available commands

@@ -82,8 +82,11 @@ def inject_start_label(args):
         s += pad + "{}\n".format(p)
     if args.commands:
         s += pad + "$ devtoolsDemoReady = True\n"
+        s += pad + '""\n'
+        s += pad + 'window hide\n'
+        s += pad + 'window auto\n'
         s += pad + 'while True:\n'
-        s += pad*2 + '""\n'
+        s += pad*2 + 'pause 0.01\n'
     else:
         s += pad + '"No command was provided, add one with --label"\n'
         s += pad + '$ renpy.quit()\n'
