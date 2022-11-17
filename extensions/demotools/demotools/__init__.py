@@ -4,7 +4,7 @@ import renpy
 import time
 
 demo_status = {
-    'current_index': 0, 'args': {},
+    'current_index': -1, 'args': {},
     'last_snapshot': None, 'schedule': [],
     }
 
@@ -32,12 +32,10 @@ def snapshot_handler():
     if demo_status['args'].render and current_time > demo_status['last_snapshot'] + timedelta(seconds = 1/demo_status['args'].render_fps):
         demo_status['last_snapshot'] = current_time
         outfile = os.path.join(demo_status['args'].destination, current_time.strftime(demo_status['args'].filename))
-        #renpy.game.interface.save_screenshot(outfile)
         dimensions = demo_status['args'].render_size if demo_status['args'].render_size else (renpy.store.config.screen_width, renpy.store.config.screen_height)
         renpy.game.interface.take_screenshot(dimensions)
         global snapshot_queue
         snapshot_queue.append((outfile, renpy.game.interface.get_screenshot()))
-# ffmpeg -v warning -i 'target/snapshot-%*.png' -vf "fps=15,scale=flags=lanczos,paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle" snapshot.gif -y
 
 def snapshot_writer():
     global snapshot_queue
@@ -54,11 +52,16 @@ def schedule_handler():
     global demo_status
     time = datetime.now().timestamp()
 
+    if demo_status['current_index'] == -1:
+        demo_status['current_index'] = 0
+        demo_status['schedule'][0].load(demo_status, time)
     current = demo_status['schedule'][demo_status['current_index']]
     if current.is_up(demo_status, time):
         current.on_up(demo_status, time)
     else:
         demo_status['current_index'] += 1
+        if demo_status['current_index'] < len(demo_status['schedule']):
+            demo_status['schedule'][demo_status['current_index']].load(demo_status, time)
         e = None
         try:
             current.on_end(demo_status, time)
@@ -99,7 +102,7 @@ class ScheduleItem:
 
     def is_up(self, context, st):
         if self.delay:
-            return self.delay + self.time < st
+            return self.delay + self.time > st
         else:
             return False
 
@@ -118,7 +121,7 @@ class UIScheduleItem(ScheduleItem):
         if self.delay is None:
             return not len(renpy.store.renpy.get_return_stack()) == 0
         else:
-            return super(CallScheduleItem, self).is_up(self, context, st)
+            return super(UIScheduleItem, self).is_up(context, st)
 
 class CallScheduleItem(UIScheduleItem):
     def on_end(self, context, st):
@@ -129,7 +132,7 @@ class CallScheduleItem(UIScheduleItem):
 
 class LoopScheduleItem(UIScheduleItem):
     def on_end(self, context, st):
-        context['current_index'] = 0
+        context['current_index'] = -1
 
 class ExitScheduleItem(UIScheduleItem):
     def on_end(self, context, st):
