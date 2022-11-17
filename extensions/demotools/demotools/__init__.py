@@ -79,7 +79,7 @@ def inject_start_label(args):
     s += pad + "$ preferences.afm_enable = True\n"
     s += pad + "$ preferences.afm_time = {}\n".format(args.afm_time)
     for p in args.exec:
-        s += pad + "$ {}\n".format(p)
+        s += pad + "{}\n".format(p)
     if args.commands:
         s += pad + "$ devtoolsDemoReady = True\n"
         s += pad + 'while True:\n'
