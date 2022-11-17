@@ -20,6 +20,10 @@ def hide_py_file(file_content):
 def package_dir(base_dir, target_file):
     dir_list = [''] # local path in base_dir
     with zipfile.ZipFile(target_file, 'w') as zip:
+        with open('../LICENSE', 'r') as f:
+            zip.writestr(zipfile.ZipInfo('LICENSE.txt'), f.read())
+        with open('../CREDITS', 'r') as f:
+            zip.writestr(zipfile.ZipInfo('CREDITS.txt'), f.read())
         while len(dir_list) > 0:
             local_dir_path = dir_list.pop(0)
             dir_path = os.path.join(base_dir, local_dir_path)
