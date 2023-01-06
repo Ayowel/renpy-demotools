@@ -1,7 +1,6 @@
 # Demotools
 
 [![Itch link](https://img.shields.io/static/v1?label=store&message=itch.io&color=blueviolet)](https://ayowel.itch.io/renpy-demotools)
-[![Release status](https://img.shields.io/github/workflow/status/ayowel/renpy-demotools/Release?label=release)](https://github.com/Ayowel/renpy-demotools/actions/workflows/release.yml)
 [![Release version](https://img.shields.io/github/v/release/ayowel/renpy-demotools)](https://github.com/Ayowel/renpy-demotools/releases/latest)
 [![License](https://img.shields.io/github/license/ayowel/renpy-demotools)](LICENSE)
 
