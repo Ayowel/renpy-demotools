@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import os
 import renpy
 import time
+import math
 
 demo_status = {
     'current_index': -1, 'args': {},
@@ -30,8 +31,10 @@ def snapshot_handler():
     current_time = datetime.now()
     if demo_status['last_snapshot'] is None:
         demo_status['last_snapshot'] = datetime.now() + timedelta(seconds = demo_status['args'].render_delay - 1/demo_status['args'].render_fps)
-    if demo_status['args'].render and current_time > demo_status['last_snapshot'] + timedelta(seconds = 1/demo_status['args'].render_fps):
-        demo_status['last_snapshot'] = current_time
+    interval = timedelta(seconds = 1/demo_status['args'].render_fps)
+    delta = current_time - demo_status['last_snapshot']
+    if demo_status['args'].render and delta > interval:
+        demo_status['last_snapshot'] += math.floor(delta/interval) * interval
         outfile = os.path.join(demo_status['args'].destination, current_time.strftime(demo_status['args'].filename))
         dimensions = demo_status['args'].render_size if demo_status['args'].render_size else (renpy.store.config.screen_width, renpy.store.config.screen_height)
         renpy.game.interface.take_screenshot(dimensions)
