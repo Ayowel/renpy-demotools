@@ -9,20 +9,10 @@ demo_status = {
     'last_snapshot': None, 'schedule': [],
     }
 
-orig_plog = renpy.plog
-def plog_override(*args, **kwargs):
-    # Target specific renpy.plog execution in renpy/execution.py
-    may_update = len(args) == 2 and args[0] == 1 and args[1].startswith('start of interact while loop')
-    after_start(may_update)
-    global orig_plog
-    orig_plog(*args, **kwargs)
-renpy.plog = plog_override
-
-def after_start(is_update_frame):
+def periodic():
     if not getattr(renpy.store, 'devtoolsDemoReady', False):
         return
-    if is_update_frame:
-        schedule_handler()
+    schedule_handler()
     snapshot_handler()
 
 snapshot_queue = []
@@ -79,6 +69,8 @@ def inject_start_label(args):
     s = ''
     s += 'default devtoolsDemoReady = False\n'
     s += 'label main_menu_screen:\n'
+    s += pad + "$ import demotools\n"
+    s += pad + "$ config.periodic_callbacks.append(demotools.periodic)\n"
     s += pad + "$ preferences.afm_enable = True\n"
     s += pad + "$ preferences.afm_time = {}\n".format(args.afm_time)
     for p in args.exec:
